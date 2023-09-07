@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { SeedModule } from './seed/seed.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { SeedModule } from './seed/seed.module';
     CommonModule,
     UserModule,
     AuthModule,
-    SeedModule
+    SeedModule,
+    ReportModule,
   ],
   controllers: [],
   providers: [],
