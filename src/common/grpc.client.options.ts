@@ -1,4 +1,4 @@
-import { ServerCredentials, credentials } from '@grpc/grpc-js';
+import { credentials } from '@grpc/grpc-js';
 import { Transport, GrpcOptions } from '@nestjs/microservices';
 import { readFileSync } from 'fs';
 import { join } from 'path';

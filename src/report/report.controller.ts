@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ReportService } from './report.service';
 
 @Controller('report')
 export class ReportController {
   constructor(private readonly reportService: ReportService) { }
 
-  @Get('test')
+  @Get('getEvents')
   async tess() {
     try {
       const data = await this.reportService.searchGroups({

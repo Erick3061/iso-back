@@ -14,7 +14,7 @@ import { LastEventGroupRequest } from 'src/common/interfaces/events/LastEventGro
 import { AccountRequest } from 'src/common/interfaces/accounts/AccountRequest';
 
 @Injectable()
-export class ReportService implements OnModuleInit {
+export class ServiceService implements OnModuleInit {
 
   private DBSevice: DbServiceClient
 

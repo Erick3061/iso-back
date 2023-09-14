@@ -65,8 +65,8 @@ export class UserService {
     return user;
   }
 
-  async findOnePlain(term: string) {
-    const user = await this.findOne(term);
+  async findOnePlain(term: string, msgError?: string) {
+    const user = await this.findOne(term, msgError);
     delete user.password;
     return user;
   }
