@@ -1,69 +1,73 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
-import { SearchRequestGroup } from 'src/common/interfaces/groups/SearchRequestGroup';
-import { DbServiceClient } from 'src/common/interfaces/db/DbService';
-import { EmptyRequest } from 'src/common/interfaces/db/EmptyRequest';
-import { AccountsRequest } from 'src/common/interfaces/accounts/AccountsRequest';
-import { GroupRequestFilter } from 'src/common/interfaces/groups/GroupRequestFilter';
-import { EventsGrouprequest } from 'src/common/interfaces/events/EventsGrouprequest';
-import { EventsRequest } from 'src/common/interfaces/events/EventsRequest';
-import { EventsWOAccountRequest } from 'src/common/interfaces/events/EventsWOAccountRequest';
-import { LastEventRequest } from 'src/common/interfaces/events/LastEventRequest';
-import { LastEventGroupRequest } from 'src/common/interfaces/events/LastEventGroupRequest';
-import { AccountRequest } from 'src/common/interfaces/accounts/AccountRequest';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { DateDto } from 'src/common/dtos/index';
+import { ServiceWmService } from 'src/services/service-wm/service-wm.service';
+import { srssta, tesstese, at5ma } from './constants/reports.constant';
 
 @Injectable()
-export class ReportService implements OnModuleInit {
-
-  private DBSevice: DbServiceClient
+export class ReportService {
 
   constructor(
-    @Inject('DB_SERVICE')
-    private readonly client: ClientGrpc
+    private readonly serviceWmService: ServiceWmService
   ) { }
 
-  onModuleInit() {
-    this.DBSevice = this.client.getService<DbServiceClient>('DbService');
+  async Srs_Sta({ start, end }: DateDto) {
+    try {
+
+      const { data } = await this.serviceWmService.getEventsWithOutAccounts({
+        dateStart: start,
+        dateEnd: end,
+        filters: srssta
+      });
+
+      return { data }
+    } catch (error) {
+      this.handleError(error)
+    }
   }
 
-  searchGroups(query: SearchRequestGroup) {
-    return firstValueFrom(this.DBSevice.searchGroups(query));
+  async Tess_Tese({ start, end }: DateDto) {
+    try {
+
+      const { data } = await this.serviceWmService.getEventsWithOutAccounts({
+        dateStart: start,
+        dateEnd: end,
+        filters: tesstese
+      });
+
+      return { data }
+    } catch (error) {
+      this.handleError(error)
+    }
   }
 
-  testService(query: EmptyRequest) {
-    return firstValueFrom(this.DBSevice.test(query));
+  async At5ma({ start, end }: DateDto) {
+    try {
+
+      const { data } = await this.serviceWmService.getEventsWithOutAccounts({
+        dateStart: start,
+        dateEnd: end,
+        filters: at5ma,
+      });
+
+      return { data }
+    } catch (error) {
+      this.handleError(error)
+    }
   }
 
-  searchAccounts(query: AccountsRequest) {
-    return firstValueFrom(this.DBSevice.searchAccounts(query));
+  async installerSystem() {
+    try {
+      const { accounts } = await this.serviceWmService.searchAccounts({
+        includePanel: true,
+      });
+      return { accounts }
+    } catch (error) {
+      this.handleError(error)
+    }
   }
 
-  findOneAccount(query: AccountRequest) {
-    return firstValueFrom(this.DBSevice.findOneAccount(query));
-  }
-
-  findOneGroup(query: GroupRequestFilter) {
-    return firstValueFrom(this.DBSevice.findOneGroup(query));
-  }
-  getEventsFromGroup(query: EventsGrouprequest) {
-    return firstValueFrom(this.DBSevice.getEventsFromGroup(query));
-  }
-
-  getEventsWithAccounts(query: EventsRequest) {
-    return firstValueFrom(this.DBSevice.getEventsWithAccounts(query));
-  }
-
-  getEventsWithOutAccounts(query: EventsWOAccountRequest) {
-    return firstValueFrom(this.DBSevice.getEventsWithOutAccounts(query));
-  }
-
-  getLasEventFromAccount(query: LastEventRequest) {
-    return firstValueFrom(this.DBSevice.getLasEventFromAccount(query));
-  }
-
-  getLastEventFromGroup(query: LastEventGroupRequest) {
-    return firstValueFrom(this.DBSevice.getLastEventFromGroup(query));
+  private handleError(error: any) {
+    throw new InternalServerErrorException(error);
   }
 
 }

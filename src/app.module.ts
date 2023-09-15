@@ -7,7 +7,7 @@ import { UserModule } from './user/user.module';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { ReportModule } from './report/report.module';
-import { ServiceModule } from './service/service.module';
+import { ServiceWmModule } from './services/service-wm/service-wm.module';
 
 @Module({
   imports: [
@@ -22,10 +22,10 @@ import { ServiceModule } from './service/service.module';
       autoLoadEntities: true
     }),
     CommonModule,
+    ServiceWmModule,
     UserModule,
     AuthModule,
     ReportModule,
-    ServiceModule,
   ],
   controllers: [],
   providers: [],

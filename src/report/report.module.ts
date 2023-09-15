@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { ReportController } from './report.controller';
-import { CommonModule } from '../common/common.module';
+import { ServiceWmModule } from 'src/services/service-wm/service-wm.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [ReportController],
   providers: [ReportService],
-  imports: [CommonModule],
+  imports: [ServiceWmModule, AuthModule],
 })
 export class ReportModule { }

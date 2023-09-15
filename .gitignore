@@ -3,6 +3,7 @@
 /node_modules
 *.tar.xz
 **/certs/*
+*.db
 
 # Logs
 logs

@@ -1,33 +1,34 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ReportService } from './report.service';
+import { DateDto } from 'src/common/dtos/index';
+import { Auth } from 'src/auth/decorators';
 
 @Controller('report')
 export class ReportController {
   constructor(private readonly reportService: ReportService) { }
 
-  @Get('getEvents')
-  async tess() {
-    try {
-      const data = await this.reportService.searchGroups({
-        groups: [{ id: 98, type: "Grupo" }],
-        includeAccounts: true,
-        includeContacts: true,
-        includeDeviceZone: true,
-        includeEmail: true,
-        includeGeneralData: true,
-        includePanel: true,
-        includePartitions: true,
-        includeSchedule: true,
-        includeSecurity: true,
-        includeUsers: true,
-        includeZones: true,
-      });
-      return {
-        ...data
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  @Get('solicitud-sistema')
+  @Auth()
+  Srs_Sta(@Query() dateDto: DateDto) {
+    return this.reportService.Srs_Sta(dateDto);
+  }
+
+  @Get('tecnico-en-sitio')
+  @Auth()
+  Tess_Tese(@Query() dateDto: DateDto) {
+    return this.reportService.Tess_Tese(dateDto);
+  }
+
+  @Get('atencion')
+  @Auth()
+  At5ma(@Query() dateDto: DateDto) {
+    return this.reportService.At5ma(dateDto);
+  }
+
+  @Get('sistemas-instalados')
+  @Auth()
+  installerSystem() {
+    return this.reportService.installerSystem();
   }
 
 }
