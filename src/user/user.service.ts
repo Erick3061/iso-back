@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -9,11 +9,14 @@ import { CreateUserDto, UpdateUserDto } from './dto';
 
 @Injectable()
 export class UserService {
+  private logger: Logger;
 
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
-  ) { }
+    private readonly userRepository: Repository<User>,
+  ) {
+    this.logger = new Logger('userRepository');
+  }
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -92,7 +95,7 @@ export class UserService {
 
   private handleError(error: any): never {
     if (error.code === 'SQLITE_CONSTRAINT') throw new BadRequestException(`UNIQUE constraint failed: userName`);
-    console.log(error)
+    this.logger.log(error)
     throw new InternalServerErrorException('Check server logs');
   }
 }
