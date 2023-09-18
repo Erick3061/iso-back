@@ -4,6 +4,7 @@
 *.tar.xz
 **/certs/*
 *.db
+*.env
 
 # Logs
 logs
