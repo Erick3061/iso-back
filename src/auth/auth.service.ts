@@ -20,7 +20,9 @@ export class AuthService {
 
     const user = await this.userService.findOne(userName, 'Credentials invalid');
 
-    if (!bcrypt.compareSync(password, user.password)) throw new UnauthorizedException('Credentials are not valid (password)');
+    if (!user.isActive) throw new UnauthorizedException('Credentials invalid');
+
+    if (!bcrypt.compareSync(password, user.password)) throw new UnauthorizedException('Credentials invalid');
 
     delete user.password;
 

@@ -1,4 +1,4 @@
-import { IsArray, IsIn, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsArray, IsBoolean, IsIn, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { TypeUser } from "../enums/user.enum";
 
 export class CreateUserDto {
@@ -19,6 +19,10 @@ export class CreateUserDto {
     //     message: 'The password must have a Uppercase, lowercase letter and a number'
     // })
     password: string;
+
+    @IsOptional()
+    @IsBoolean()
+    isActive?: boolean;
 
     @IsOptional()
     @IsIn(['user', 'admin'])

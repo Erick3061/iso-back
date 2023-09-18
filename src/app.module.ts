@@ -8,6 +8,7 @@ import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { ReportModule } from './report/report.module';
 import { ServiceWmModule } from './services/service-wm/service-wm.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ServiceWmModule } from './services/service-wm/service-wm.module';
     UserModule,
     AuthModule,
     ReportModule,
+    SeedModule,
   ],
   controllers: [],
   providers: [],

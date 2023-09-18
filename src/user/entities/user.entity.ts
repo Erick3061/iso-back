@@ -23,6 +23,11 @@ export class User {
     })
     role: string;
 
+    @Column('boolean', {
+        default: false,
+    })
+    isActive: boolean;
+
     @CreateDateColumn()
     createdAt?: Date;
 
