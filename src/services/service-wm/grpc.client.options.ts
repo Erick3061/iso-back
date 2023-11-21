@@ -14,6 +14,7 @@ export const grpcClientOptions: GrpcOptions = {
             readFileSync(join(__dirname, './certs/client.key')),
             readFileSync(join(__dirname, './certs/client.crt'))
         ),
+        maxReceiveMessageLength: 1024 * 1024 * 10
     },
 };
 

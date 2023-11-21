@@ -44,7 +44,7 @@ export class User {
     @ManyToOne(
         () => User,
         user => user.users,
-        { onDelete: 'CASCADE' }
+        // { onDelete: 'CASCADE' }
     )
     @JoinColumn({ name: 'createdBy' })
     user: User

@@ -1,24 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
-import { Auth } from 'src/auth/decorators';
+import { Auth, GetUser } from 'src/auth/decorators';
 import { TypeUser } from './enums/user.enum';
+import { User } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @Auth(TypeUser.admin)
+  create(@Body() createUserDto: CreateUserDto, @GetUser() user: User) {
+    return this.userService.create(createUserDto, user);
   }
 
   @Get()
   @Auth(TypeUser.admin)
-  findAll(@Query() paginationDto: PaginationDto) {
-    return this.userService.findAll(paginationDto);
+  findAll(@Query() paginationDto: PaginationDto, @GetUser() user: User) {
+    return this.userService.findAll(paginationDto, user.userName === 'admin' ? undefined : user);
   }
 
   @Get(':term')
@@ -35,7 +37,7 @@ export class UserController {
 
   @Delete(':id')
   @Auth(TypeUser.admin)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.remove(id);
+  remove(@Param('id', ParseUUIDPipe) id: string, @GetUser() user: User) {
+    return this.userService.remove(id, user);
   }
 }

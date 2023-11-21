@@ -18,34 +18,41 @@ export class UserService {
     this.logger = new Logger('userRepository');
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto, user?: User) {
     try {
 
       const { password, ...userData } = createUserDto;
 
-      const user = this.userRepository.create({
+      const userToCreate = this.userRepository.create({
         ...userData,
-        password: bcrypt.hashSync(password, 10)
+        password: bcrypt.hashSync(password, 10),
+        user
       });
 
-      await this.userRepository.save(user)
-      delete user.password;
+      await this.userRepository.save(userToCreate)
+      delete userToCreate.password;
 
-      return user;
+      return userToCreate;
 
     } catch (error) {
+      console.log();
+
       this.handleError(error);
     }
   }
 
-  async findAll(paginationDto: PaginationDto) {
+  async findAll(paginationDto: PaginationDto, user?: User) {
     try {
-
       const { limit = 10, offset = 0 } = paginationDto;
 
       const users = (await this.userRepository.find({
         take: limit,
-        skip: offset
+        skip: offset,
+        where: {
+          user: user ? {
+            id: user.id
+          } : {}
+        }
       })).map(user => {
         delete user.password;
         return user;
@@ -87,15 +94,31 @@ export class UserService {
     }
   }
 
-  async remove(id: string) {
-    const product = await this.findOne(id);
-    await this.userRepository.remove(product);
-    return true
+  async remove(id: string, admin: User) {
+    try {
+      const userFind = await this.findOne(id);
+      if (admin.id === id) throw new BadRequestException(`User ${admin.fullName} are not valid`);
+      await this.userRepository.remove(userFind);
+      return true
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   private handleError(error: any): never {
-    if (error.code === 'SQLITE_CONSTRAINT') throw new BadRequestException(`UNIQUE constraint failed: userName`);
-    this.logger.log(error)
+    if (error.errno === 19 && error.code === 'SQLITE_CONSTRAINT') {
+      if (`${error.driverError}`.includes('UNIQUE constraint failed')) {
+        const message: string = `${error.driverError}`.replace('SQLITE_CONSTRAINT:', '').replace('UNIQUE constraint failed:', '');
+        if (message.includes('User.')) {
+          throw new BadRequestException(`${message.split('.')[1]} already exists`);
+        }
+      }
+      if (`${error.driverError}`.includes('FOREIGN KEY constraint failed')) {
+        throw new BadRequestException(`Invalid action, depends on other values.`);
+      }
+      throw new BadRequestException(`${error.driverError}`);
+    }
+
     throw new InternalServerErrorException('Check server logs');
   }
 }
