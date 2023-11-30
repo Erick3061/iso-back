@@ -624,3 +624,25 @@ export const at5ma: Array<FilterEvents> =
         { code: "SAS", type: 1 },
         { code: "SMOKE", type: 1 },
     ];
+
+export const opat: Array<FilterEvents> = [
+    ...at5ma,
+    { code: "VE", type: 1 },
+    { code: "O", type: 1 },
+    { code: "OS", type: 1 },
+    { code: "US11", type: 1 },
+    { code: "C", type: 1 },
+    { code: "CS", type: 1 },
+    { code: "UR11", type: 1 },
+    { code: "BB", type: 1 },
+    { code: "AGT", type: 1 },
+    { code: "AT", type: 1 },
+    { code: "ATP", type: 1 },
+    { code: "AUT", type: 1 },
+    { code: "TST", type: 1 },
+    { code: "TST0", type: 1 },
+    { code: "TST1", type: 1 },
+    { code: "TST3", type: 1 },
+    { code: "TSTR", type: 1 },
+    { code: "TX0", type: 1 },
+]

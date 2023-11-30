@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ReportService } from './report.service';
-import { DateDto } from 'src/common/dtos/index';
+import { DateDto, DateTimeDto } from 'src/common/dtos/index';
 import { Auth } from 'src/auth/decorators';
 
 @Controller('report')
@@ -23,6 +23,12 @@ export class ReportController {
   @Auth()
   At5ma(@Query() dateDto: DateDto) {
     return this.reportService.At5ma(dateDto);
+  }
+
+  @Get('at-operador')
+  @Auth()
+  AtOperator(@Query() dateTimeDto: DateTimeDto) {
+    return this.reportService.AtOperator(dateTimeDto);
   }
 
   @Get('sistemas-instalados')

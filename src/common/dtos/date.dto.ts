@@ -1,5 +1,5 @@
 import { IsString } from "class-validator";
-import { ValidDate } from "../decorators/validation/valid-date.decorator";
+import { ValidDate } from "../decorators/validation";
 
 export class DateDto {
     @IsString()

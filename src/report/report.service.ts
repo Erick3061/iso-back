@@ -1,9 +1,8 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { DateDto } from 'src/common/dtos/index';
+import { DateDto, DateTimeDto } from 'src/common/dtos/index';
 import { ServiceWmService } from 'src/services/service-wm/service-wm.service';
-import { srssta, tesstese, at5ma } from './constants/reports.constant';
+import { srssta, tesstese, at5ma, opat } from './constants/reports.constant';
 import { Filters } from './helper/filters.heper';
-import { find } from 'rxjs';
 
 @Injectable()
 export class ReportService {
@@ -141,21 +140,27 @@ export class ReportService {
     }
   }
 
-  async AtOperator({ start, end }: DateDto) {
+  async AtOperator({ start, end }: DateTimeDto) {
     try {
 
       const { data } = await this.serviceWmService.getEventsWithOutAccounts({
-        dateStart: start,
-        dateEnd: end,
-        filters: at5ma,
+        dateStart: start.split(' ')[0],
+        dateEnd: end.split(' ')[0],
+        filters: opat,
         order: 'DESC',
       });
 
-      const events = data.map(event => {
-        return { ...event, Minutes: this.filtersHelpers.getMinutes(new Date(`${event.FechaPrimeraToma}T${event.HoraPrimeraToma}.000Z`).getTime() - new Date(`${event.FechaOriginal}T${event.Hora}.000Z`).getTime()).minutes }
+      const events = data.filter(event => {
+        const timeEvent: number = new Date(`${event.FechaPrimeraToma}T${event.HoraPrimeraToma}.000Z`).getTime();
+        const timeStart: number = new Date(`${`${start}`.replace(' ', 'T')}:00.000Z`).getTime();
+        const timeEnd: number = new Date(`${`${end}`.replace(' ', 'T')}:00.000Z`).getTime();
+        if (timeEvent >= timeStart && timeEvent <= timeEnd && event.ClaveMonitorista !== 'SYSTEM')
+          return { ...event, Minutes: this.filtersHelpers.getMinutes(new Date(`${event.FechaPrimeraToma}T${event.HoraPrimeraToma}.000Z`).getTime() - new Date(`${event.FechaOriginal}T${event.Hora}.000Z`).getTime()).minutes }
       });
 
-      return { events }
+      const operators = [...new Set(events.map(event => event.ClaveMonitorista))].reduce((acc, current) => [...acc, { name: current, events: events.filter(event => event.ClaveMonitorista === current) }], []);
+
+      return { totalEvents: events.length, operators }
     } catch (error) {
       this.handleError(error)
     }
