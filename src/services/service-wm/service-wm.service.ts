@@ -64,4 +64,12 @@ export class ServiceWmService implements OnModuleInit {
     getLastEventFromGroup(query: LastEventGroupRequest) {
         return firstValueFrom(this.DBSevice.getLastEventFromGroup(query));
     }
+
+    getCatalogueAlarms(query: EmptyRequest) {
+        return firstValueFrom(this.DBSevice.getCatalogueAlarms(query));
+    }
+
+    getCatalogueEvents(query: EmptyRequest) {
+        return firstValueFrom(this.DBSevice.getCatalogueEvents(query));
+    }
 }

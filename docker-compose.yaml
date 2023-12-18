@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  iso_back:
+    #todo -- descomentar el build para nievas versiones
+    #build:
+    #  context: .
+    #  dockerfile: Dockerfile
+    networks:
+      - rpc_mw
+    image: iso_back
+    container_name: iso_back
+    restart: always
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./database:/usr/src/app/database
+      - /home/erick/Documentos/certs_service_mw/Client:/usr/src/app/dist/services/service-wm/certs
+    environment:
+      PORT: ${PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      URL_SERVICE: service_mw:3000
+
+networks:
+  rpc_mw:
+    name: rpc_mw
+    external: true

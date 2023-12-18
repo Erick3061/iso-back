@@ -19,6 +19,8 @@ import type { GroupsEventsResponse as _events_GroupsEventsResponse, GroupsEvents
 import type { GroupsLastEventResponse as _events_GroupsLastEventResponse, GroupsLastEventResponse__Output as _events_GroupsLastEventResponse__Output } from '../events/GroupsLastEventResponse';
 import type { LastEventGroupRequest as _events_LastEventGroupRequest, LastEventGroupRequest__Output as _events_LastEventGroupRequest__Output } from '../events/LastEventGroupRequest';
 import type { LastEventRequest as _events_LastEventRequest, LastEventRequest__Output as _events_LastEventRequest__Output } from '../events/LastEventRequest';
+import type { ResponseAlarms as _catalogue_ResponseAlarms, ResponseAlarms__Output as _catalogue_ResponseAlarms__Output } from '../catalogue/ResponseAlarms';
+import type { ResponseEvents as _catalogue_ResponseEvents, ResponseEvents__Output as _catalogue_ResponseEvents__Output } from '../catalogue/ResponseEvents';
 import type { ResponseGroups as _groups_ResponseGroups, ResponseGroups__Output as _groups_ResponseGroups__Output } from '../groups/ResponseGroups';
 import type { ResponseTest as _db_ResponseTest, ResponseTest__Output as _db_ResponseTest__Output } from '../db/ResponseTest';
 import type { SearchRequestGroup as _groups_SearchRequestGroup, SearchRequestGroup__Output as _groups_SearchRequestGroup__Output } from '../groups/SearchRequestGroup';
@@ -31,6 +33,12 @@ export interface DbServiceClient extends grpc.Client {
 
   FindOneGroup(argument: _groups_GroupRequestFilter): Observable<_groups_Group__Output>;
   findOneGroup(argument: _groups_GroupRequestFilter): Observable<_groups_Group__Output>;
+
+  GetCatalogueAlarms(argument: _db_EmptyRequest): Observable<_catalogue_ResponseAlarms__Output>;
+  getCatalogueAlarms(argument: _db_EmptyRequest): Observable<_catalogue_ResponseAlarms__Output>;
+
+  GetCatalogueEvents(argument: _db_EmptyRequest): Observable<_catalogue_ResponseEvents__Output>;
+  getCatalogueEvents(argument: _db_EmptyRequest): Observable<_catalogue_ResponseEvents__Output>;
 
   GetEventsFromGroup(argument: _events_EventsGrouprequest): Observable<_events_GroupsEventsResponse__Output>;
   getEventsFromGroup(argument: _events_EventsGrouprequest): Observable<_events_GroupsEventsResponse__Output>;
@@ -65,6 +73,10 @@ export interface DbServiceHandlers extends grpc.UntypedServiceImplementation {
 
   GetEventsFromGroup: grpc.handleUnaryCall<_events_EventsGrouprequest__Output, _events_GroupsEventsResponse>;
 
+  GetCatalogueAlarms: grpc.handleUnaryCall<_db_EmptyRequest__Output, _catalogue_ResponseAlarms>;
+
+  GetCatalogueEvents: grpc.handleUnaryCall<_db_EmptyRequest__Output, _catalogue_ResponseEvents>;
+
   GetEventsWithAccounts: grpc.handleUnaryCall<_events_EventsRequest__Output, _events_AccountsEventResponse>;
 
   GetEventsWithOutAccounts: grpc.handleUnaryCall<_events_EventsWOAccountRequest__Output, _events_EventWOAccountResponse>;
@@ -85,6 +97,8 @@ export interface DbServiceDefinition extends grpc.ServiceDefinition {
   FindOneAccount: MethodDefinition<_accounts_AccountRequest, _accounts_Account, _accounts_AccountRequest__Output, _accounts_Account__Output>
   FindOneGroup: MethodDefinition<_groups_GroupRequestFilter, _groups_Group, _groups_GroupRequestFilter__Output, _groups_Group__Output>
   GetEventsFromGroup: MethodDefinition<_events_EventsGrouprequest, _events_GroupsEventsResponse, _events_EventsGrouprequest__Output, _events_GroupsEventsResponse__Output>
+  GetCatalogueAlarms: MethodDefinition<_db_EmptyRequest, _catalogue_ResponseAlarms, _db_EmptyRequest__Output, _catalogue_ResponseAlarms__Output>
+  GetCatalogueEvents: MethodDefinition<_db_EmptyRequest, _catalogue_ResponseEvents, _db_EmptyRequest__Output, _catalogue_ResponseEvents__Output>
   GetEventsWithAccounts: MethodDefinition<_events_EventsRequest, _events_AccountsEventResponse, _events_EventsRequest__Output, _events_AccountsEventResponse__Output>
   GetEventsWithOutAccounts: MethodDefinition<_events_EventsWOAccountRequest, _events_EventWOAccountResponse, _events_EventsWOAccountRequest__Output, _events_EventWOAccountResponse__Output>
   GetLasEventFromAccount: MethodDefinition<_events_LastEventRequest, _events_AccountsLastEventResponse, _events_LastEventRequest__Output, _events_AccountsLastEventResponse__Output>

@@ -18,7 +18,7 @@ import { SeedModule } from './seed/seed.module';
     }),
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: join(__dirname, '..', 'database.db'),
+      database: join(__dirname, '..', './database/database.db'),
       synchronize: true,
       autoLoadEntities: true
     }),

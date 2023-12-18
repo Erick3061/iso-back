@@ -23,6 +23,12 @@ export interface ProtoGrpcType {
     User: MessageTypeDefinition
     Zone: MessageTypeDefinition
   }
+  catalogue: {
+    AlarmCAT: MessageTypeDefinition
+    EventCAT: MessageTypeDefinition
+    ResponseAlarms: MessageTypeDefinition
+    ResponseEvents: MessageTypeDefinition
+  }
   db: {
     DbService: SubtypeConstructor<typeof grpc.Client, _db_DbServiceClient> & { service: _db_DbServiceDefinition }
     EmptyRequest: MessageTypeDefinition

@@ -142,7 +142,6 @@ export class ReportService {
 
   async AtOperator({ start, end }: DateTimeDto) {
     try {
-
       const { data } = await this.serviceWmService.getEventsWithOutAccounts({
         dateStart: start.split(' ')[0],
         dateEnd: end.split(' ')[0],
@@ -150,13 +149,13 @@ export class ReportService {
         order: 'DESC',
       });
 
-      const events = data.filter(event => {
+      const events = data.map(event => {
         const timeEvent: number = new Date(`${event.FechaPrimeraToma}T${event.HoraPrimeraToma}.000Z`).getTime();
         const timeStart: number = new Date(`${`${start}`.replace(' ', 'T')}:00.000Z`).getTime();
         const timeEnd: number = new Date(`${`${end}`.replace(' ', 'T')}:00.000Z`).getTime();
         if (timeEvent >= timeStart && timeEvent <= timeEnd && event.ClaveMonitorista !== 'SYSTEM')
           return { ...event, Minutes: this.filtersHelpers.getMinutes(new Date(`${event.FechaPrimeraToma}T${event.HoraPrimeraToma}.000Z`).getTime() - new Date(`${event.FechaOriginal}T${event.Hora}.000Z`).getTime()).minutes }
-      });
+      }).filter(event => event);
 
       const operators = [...new Set(events.map(event => event.ClaveMonitorista))].reduce((acc, current) => [...acc, { name: current, events: events.filter(event => event.ClaveMonitorista === current) }], []);
 
