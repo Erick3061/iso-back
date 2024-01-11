@@ -14,7 +14,6 @@ export class ReportService {
 
   async Srs_Sta({ start, end }: DateDto) {
     try {
-
       const { data } = await this.serviceWmService.getEventsWithAccounts({
         dateStart: start,
         dateEnd: end,
@@ -90,7 +89,6 @@ export class ReportService {
 
   async Tess_Tese({ start, end }: DateDto) {
     try {
-
       const { data } = await this.serviceWmService.getEventsWithAccounts({
         dateStart: start,
         dateEnd: end,
@@ -98,8 +96,6 @@ export class ReportService {
         includeComments: true,
         state: 'Activas'
       });
-
-
 
       const events = data.filter(account => account.eventos).map(account => {
         const evs = account.eventos.map(ev => {
@@ -122,7 +118,6 @@ export class ReportService {
 
   async At5ma({ start, end }: DateDto) {
     try {
-
       const { data } = await this.serviceWmService.getEventsWithOutAccounts({
         dateStart: start,
         dateEnd: end,
@@ -142,23 +137,23 @@ export class ReportService {
 
   async AtOperator({ start, end }: DateTimeDto) {
     try {
+      const [dateStart, startQuery] = start.split(' ');
+      const [dateEnd, endQuery] = end.split(' ');
       const { data } = await this.serviceWmService.getEventsWithOutAccounts({
-        dateStart: start.split(' ')[0],
-        dateEnd: end.split(' ')[0],
+        dateStart,
+        dateEnd,
+        startQuery,
+        endQuery,
         filters: opat,
         order: 'DESC',
       });
 
       const events = data.map(event => {
-        const timeEvent: number = new Date(`${event.FechaPrimeraToma}T${event.HoraPrimeraToma}.000Z`).getTime();
-        const timeStart: number = new Date(`${`${start}`.replace(' ', 'T')}:00.000Z`).getTime();
-        const timeEnd: number = new Date(`${`${end}`.replace(' ', 'T')}:00.000Z`).getTime();
-        if (timeEvent >= timeStart && timeEvent <= timeEnd && event.ClaveMonitorista !== 'SYSTEM')
+        if (event.ClaveMonitorista !== 'SYSTEM')
           return { ...event, Minutes: this.filtersHelpers.getMinutes(new Date(`${event.FechaPrimeraToma}T${event.HoraPrimeraToma}.000Z`).getTime() - new Date(`${event.FechaOriginal}T${event.Hora}.000Z`).getTime()).minutes }
       }).filter(event => event);
 
       const operators = [...new Set(events.map(event => event.ClaveMonitorista))].reduce((acc, current) => [...acc, { name: current, events: events.filter(event => event.ClaveMonitorista === current) }], []);
-
       return { totalEvents: events.length, operators }
     } catch (error) {
       this.handleError(error)
@@ -178,10 +173,8 @@ export class ReportService {
   }
 
   private handleError(error: any) {
-    if (error.code === 2 && error.details.includes('Evento2021 NO EXISTE EN EL SERVIDOR')) {
-      throw new BadRequestException('Year invalid');
-    }
-    throw new InternalServerErrorException(error);
+    if (error.code === 2 && error.details.includes('NO EXISTE EN EL SERVIDOR')) throw new BadRequestException('Year invalid');
+    throw new InternalServerErrorException(JSON.stringify(error));
   }
 
 }
