@@ -4,13 +4,13 @@ services:
   iso_back:
     #todo -- descomentar el build para nievas versiones
     #build:
-    #  context: .
-    #  dockerfile: Dockerfile
+    #context: .
+    #dockerfile: Dockerfile
     #todo -- comentar para no hacer el build
     networks:
       - rpc_mw
-    image: iso_back
-    container_name: iso_back
+    image: isoback
+    container_name: isoback
     restart: always
     ports:
       - "${PORT}:${PORT}"

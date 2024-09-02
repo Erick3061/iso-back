@@ -4,11 +4,9 @@ import { userAdmin } from './data/data.seed';
 
 @Injectable()
 export class SeedService {
-    constructor(
-        private readonly userService: UserService
-    ) { }
+  constructor(private readonly userService: UserService) {}
 
-    async initilize() {
-        return await this.userService.create(userAdmin);
-    }
+  async initilize() {
+    return await this.userService.create(userAdmin);
+  }
 }

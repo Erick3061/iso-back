@@ -14,13 +14,13 @@ import { SeedModule } from './seed/seed.module';
   imports: [
     ConfigModule.forRoot(),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public')
+      rootPath: join(__dirname, '..', 'public'),
     }),
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: join(__dirname, '..', './database/database.db'),
       synchronize: true,
-      autoLoadEntities: true
+      autoLoadEntities: true,
     }),
     CommonModule,
     ServiceWmModule,
@@ -32,4 +32,4 @@ import { SeedModule } from './seed/seed.module';
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
